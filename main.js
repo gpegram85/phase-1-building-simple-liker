@@ -4,8 +4,32 @@ const FULL_HEART = '♥'
 
 // Your JavaScript code goes here!
 
+const heartGlyphs = document.querySelectorAll(".like-glyph")
+  for (const glyph of heartGlyphs) {
+    glyph.addEventListener('click', handleLike)
+  }
 
-
+  function handleLike(e) {
+    heartContainer = e.target
+    mimicServerCall()
+    .then(response => {
+      if (response === "Pretend remote server notified of action!" && heartContainer.innerText === EMPTY_HEART) {
+        heartContainer.innerText = FULL_HEART
+        heartContainer.classList.add('activated-heart')
+      } else if (response === "Pretend remote server notified of action!" && heartContainer.innerText === FULL_HEART) {
+        heartContainer.innerText = EMPTY_HEART
+        heartContainer.classList.remove('activated-heart')
+      }
+    })
+    .catch(error => {
+      const errModal = document.getElementById('modal')
+      const errModalMessage = document.getElementById('modal-message')
+      errModalMessage.innerText = error
+      errModal.classList.remove('hidden')
+      setTimeout(() => {
+        errModal.classList.add('hidden')}, 3000)
+    })
+  }
 
 //------------------------------------------------------------------------------
 // Don't change the code below: this function mocks the server response
